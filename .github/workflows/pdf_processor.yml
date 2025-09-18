@@ -1,0 +1,45 @@
+name: Process Official PDFs
+
+on:
+  schedule:
+    - cron: '5 15 * * *'
+  
+  workflow_dispatch:
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v3
+
+      - name: Clone the official repository
+        run: |
+          # Используем --depth 1 для скорости, так как нам нужна только последняя версия файлов
+          git clone --depth 1 https://github.com/BRAIn-Lab-teaching/OPTIMIZATION-METHODS-COURSE official_repo
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run the PDF processing script
+        run: |
+          # Копируем все PDF из официального репозитория в нашу папку input
+          # find ... -exec ... {} +; более надежен, чем cp с *, если файлов много
+          find official_repo -name "*.pdf" -exec cp {} input/ \;
+          
+          # Запускаем сам скрипт
+          python process_pdfs.py
+
+      - name: Commit and push processed files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Автоматическое обновление обработанных PDF"
+          file_pattern: output/*.pdf
