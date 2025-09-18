@@ -42,5 +42,5 @@ jobs:
       - name: Commit and push processed files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Автоматическое обновление обработанных PDF"
+          commit_message: "Автоматическое обновление"
           file_pattern: output/*.pdf
