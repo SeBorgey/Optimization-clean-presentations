@@ -12,7 +12,7 @@ jobs:
 
     permissions:
         contents: write
-        
+
     steps:
       - name: Checkout your repository
         uses: actions/checkout@v3
@@ -22,7 +22,6 @@ jobs:
 
       - name: Clone the official repository
         run: |
-          # Используем --depth 1 для скорости, так как нам нужна только последняя версия файлов
           git clone --depth 1 --branch ПМИ_осень_2025 https://github.com/BRAIn-Lab-teaching/OPTIMIZATION-METHODS-COURSE official_repo
       
       - name: Set up Python
@@ -37,7 +36,7 @@ jobs:
 
       - name: Run the PDF processing script
         run: |
-          cp "official_repo/Лекции/Лекция "*/*.pdf input/
+          cp "official_repo/OPTIMIZATION-METHODS-COURSE/Лекции/Лекция "*/"Слайды "*.pdf input/ || true
           python process_pdfs.py
 
       - name: Commit and push processed files
