@@ -14,10 +14,13 @@ jobs:
       - name: Checkout your repository
         uses: actions/checkout@v3
 
+      - name: Create working directories
+        run: mkdir -p input output
+
       - name: Clone the official repository
         run: |
           # Используем --depth 1 для скорости, так как нам нужна только последняя версия файлов
-          git clone --depth 1 https://github.com/BRAIn-Lab-teaching/OPTIMIZATION-METHODS-COURSE official_repo
+          git clone --depth 1 --branch ПМИ_осень_2025 https://github.com/BRAIn-Lab-teaching/OPTIMIZATION-METHODS-COURSE official_repo
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,11 +34,7 @@ jobs:
 
       - name: Run the PDF processing script
         run: |
-          # Копируем все PDF из официального репозитория в нашу папку input
-          # find ... -exec ... {} +; более надежен, чем cp с *, если файлов много
-          find official_repo -name "*.pdf" -exec cp {} input/ \;
-          
-          # Запускаем сам скрипт
+          cp "official_repo/Лекции/Лекция "*/*.pdf input/
           python process_pdfs.py
 
       - name: Commit and push processed files
